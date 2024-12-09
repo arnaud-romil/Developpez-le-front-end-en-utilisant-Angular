@@ -1,7 +1,11 @@
 <h2>Olympic games app</h2>
 <hr />
-<!--<p>{{ (olympics$ | async)?.length }} data loaded</p>-->
-@for (olympic of olympics$ | async; track olympic.id) {
-<p>{{ olympic.id }}</p>
-<p>{{ olympic.country }}</p>
-}
+
+<div style="display: block;">
+    <div style="display: block;">
+        <ngx-charts-pie-chart [view]="view" [scheme]="'cool'" [results]="pieChartData$ | async " [gradient]="gradient"
+            [legend]="showLegend" [labels]="showLabels" [explodeSlices]="explodeSlices" [doughnut]="doughnut"
+            (select)="onSelect($event)">
+        </ngx-charts-pie-chart>
+    </div>
+</div>
