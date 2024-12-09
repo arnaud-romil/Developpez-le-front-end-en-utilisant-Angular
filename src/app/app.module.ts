@@ -7,9 +7,10 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CountryComponent } from './pages/country/country.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, NotFoundComponent],
+  declarations: [AppComponent, HomeComponent, NotFoundComponent, CountryComponent],
   imports: [BrowserModule, AppRoutingModule, NgxChartsModule, BrowserAnimationsModule],
   providers: [
     provideHttpClient(withInterceptorsFromDi())

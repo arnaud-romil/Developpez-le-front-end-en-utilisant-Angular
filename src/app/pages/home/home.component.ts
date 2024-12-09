@@ -1,29 +1,35 @@
 import { Component, OnInit } from '@angular/core';
-import { map, Observable, } from 'rxjs';
+import { Router } from '@angular/router';
+import { map, Observable, tap, } from 'rxjs';
 import { Participation } from 'src/app/core/models/participation.model';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+  styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
 
-  public pieChartData$!: Observable<{ name: string; value: number }[]>;
+  pieChartData$!: Observable<{ name: string; value: number }[]>;
+  private countriesById: { id: number; country: string }[] = [];
 
   // Pie Chart options
-  view: [number, number] = [700, 400]; // Dimensions [width, height]
+  view: [number, number] = [700, 400];
   gradient: boolean = true;
   showLegend: boolean = false;
   showLabels: boolean = true;
   explodeSlices: boolean = false;
   doughnut: boolean = false;
 
-  constructor(private olympicService: OlympicService) { }
+  constructor(
+    private olympicService: OlympicService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.pieChartData$ = this.olympicService.getOlympics().pipe(
+      tap(olympics => olympics.forEach(olympic => this.countriesById.push({ id: olympic.id, country: olympic.country }))),
       map(
         olympics =>
           olympics.map(
@@ -42,8 +48,8 @@ export class HomeComponent implements OnInit {
     return result;
   }
 
-  onSelect(data: any): void {
-    console.log('Item sélectionné', JSON.stringify(data));
+  onSelect(data: { name: string; value: number; label: string }): void {
+    this.router.navigateByUrl('country/' + this.countriesById.find(i => i.country === data.name)?.id);
   }
 
 }

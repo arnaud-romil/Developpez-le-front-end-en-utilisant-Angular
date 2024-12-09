@@ -1,0 +1,12 @@
+<div style="display: block;">
+    <ngx-charts-line-chart [view]="view" [scheme]="'cool'" [results]="lineChartData$ | async" [legend]="legend"
+        [xAxis]="xAxis" [yAxis]="yAxis" [showGridLines]="showGridLines" [autoScale]="autoScale"
+        [animations]="animations" [showXAxisLabel]="showLabels" [showYAxisLabel]="showLabels" [xAxisLabel]="'Year'"
+        [yAxisLabel]="'Medals'" (select)="onSelect($event)">
+    </ngx-charts-line-chart>
+</div>
+
+<div>
+    <a routerLink="">BACK</a>
+
+</div>
