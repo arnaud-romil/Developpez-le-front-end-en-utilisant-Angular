@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { IOlympic } from 'src/app/core/models/olympic.model';
+import { Olympic } from 'src/app/core/models/olympic.model';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  public olympics$!: Observable<IOlympic[]>;
+  public olympics$!: Observable<Olympic[]>;
 
   constructor(private olympicService: OlympicService) { }
 

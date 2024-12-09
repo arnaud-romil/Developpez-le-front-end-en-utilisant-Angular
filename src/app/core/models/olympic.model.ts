@@ -1,7 +1,7 @@
-import { IParticipation } from "./participation.model";
+import { Participation } from "./participation.model";
 
-export interface IOlympic {
+export interface Olympic {
     id: number;
     country: string;
-    participations: IParticipation[];
+    participations: Participation[];
 }
