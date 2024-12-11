@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { map, Observable } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { filter, map, Observable } from 'rxjs';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
 @Component({
@@ -10,10 +10,13 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
 })
 export class CountryComponent implements OnInit {
 
+  country$!: Observable<string>;
+  participations$!: Observable<number>;
+  medals$!: Observable<number>;
+  athletes$!: Observable<number>;
   lineChartData$!: Observable<{ name: string; series: { name: string; value: number }[] }[]>;
 
   //Line Chart options
-  view: [number, number] = [700, 400];
   legend = false;
   showLabels = true;
   animations = false;
@@ -24,16 +27,40 @@ export class CountryComponent implements OnInit {
 
   constructor(
     private olympicService: OlympicService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
 
     const countryId = Number(this.route.snapshot.params['id']);
-    this.lineChartData$ = this.olympicService.getOlympics().pipe(
+
+    const olympic$ = this.olympicService.getOlympics().pipe(
+      filter(olympics => olympics.length > 0),
+      map(olympics => olympics.filter(olympic => olympic.id === countryId))
+    );
+
+    this.country$ = olympic$.pipe(
+      map(olympic => olympic[0].country)
+    );
+
+    this.participations$ = olympic$.pipe(
+      map(olympic => olympic[0].participations.length)
+    );
+
+    this.medals$ = olympic$.pipe(
       map(
-        olympics => olympics.filter(olympic => olympic.id === countryId)
-      ),
+        olympic =>
+          olympic[0].participations.reduce((sum, participation) => sum + participation.medalsCount, 0)
+      ));
+
+    this.athletes$ = olympic$.pipe(
+      map(
+        olympic =>
+          olympic[0].participations.reduce((sum, participation) => sum + participation.athleteCount, 0)
+      ));
+
+    this.lineChartData$ = olympic$.pipe(
       map(
         olympics =>
           olympics.map(
@@ -50,6 +77,7 @@ export class CountryComponent implements OnInit {
     console.log('Item clicked', JSON.parse(JSON.stringify(data)));
   }
 
-
-
+  goBack(): void {
+    this.router.navigateByUrl('/');
+  }
 }

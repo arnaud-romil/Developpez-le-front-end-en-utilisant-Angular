@@ -1,12 +1,31 @@
-<div style="display: block;">
-    <ngx-charts-line-chart [view]="view" [scheme]="'cool'" [results]="lineChartData$ | async" [legend]="legend"
-        [xAxis]="xAxis" [yAxis]="yAxis" [showGridLines]="showGridLines" [autoScale]="autoScale"
-        [animations]="animations" [showXAxisLabel]="showLabels" [showYAxisLabel]="showLabels" [xAxisLabel]="'Year'"
-        [yAxisLabel]="'Medals'" (select)="onSelect($event)">
-    </ngx-charts-line-chart>
-</div>
+<header>
+    <h1>{{ country$ | async }}</h1>
+</header>
 
-<div>
-    <a routerLink="">BACK</a>
+<main>
+    <section class="data-container">
+        <div class="data-item">
+            <p class="data-item-label">Number of entries</p>
+            <p class="data-item-value">{{ participations$ | async }}</p>
+        </div>
+        <div class="data-item">
+            <p class="data-item-label">Total number medals</p>
+            <p class="data-item-value">{{ medals$ | async }}</p>
+        </div>
+        <div class="data-item">
+            <p class="data-item-label">Total number of athletes</p>
+            <p class="data-item-value">{{ athletes$ | async }}</p>
+        </div>
+    </section>
+    <section class="chart-container">
+        <ngx-charts-line-chart [scheme]="'cool'" [results]="lineChartData$ | async" [legend]="legend" [xAxis]="xAxis"
+            [yAxis]="yAxis" [showGridLines]="showGridLines" [autoScale]="autoScale" [animations]="animations"
+            [showXAxisLabel]="showLabels" [showYAxisLabel]="showLabels" [xAxisLabel]="'Year'" [yAxisLabel]="'Medals'"
+            (select)="onSelect($event)">
+        </ngx-charts-line-chart>
+    </section>
+    <section>
+        <button class="back-button" type="button" (click)="goBack()">BACK</button>
+    </section>
 
-</div>
+</main>

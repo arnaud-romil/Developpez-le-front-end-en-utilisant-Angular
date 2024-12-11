@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { map, Observable, tap, } from 'rxjs';
-import { Participation } from 'src/app/core/models/participation.model';
+import { map, Observable } from 'rxjs';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
 @Component({
@@ -11,11 +10,13 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
 })
 export class HomeComponent implements OnInit {
 
+  title: string = 'Medals per Country';
+  years$!: Observable<number>;
+  countries$!: Observable<number>;
   pieChartData$!: Observable<{ name: string; value: number }[]>;
   private countriesById: { id: number; country: string }[] = [];
 
   // Pie Chart options
-  view: [number, number] = [700, 400];
   gradient: boolean = true;
   showLegend: boolean = false;
   showLabels: boolean = true;
@@ -28,24 +29,47 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.pieChartData$ = this.olympicService.getOlympics().pipe(
-      tap(olympics => olympics.forEach(olympic => this.countriesById.push({ id: olympic.id, country: olympic.country }))),
+
+    const olympics$ = this.olympicService.getOlympics();
+
+    let uniqueYears: number[] = [];
+    this.years$ = olympics$.pipe(
+      map(
+        olympics => {
+          olympics.forEach(olympic =>
+            olympic.participations.forEach(participation => {
+              if (!uniqueYears.includes(participation.year)) {
+                uniqueYears.push(participation.year);
+              }
+            })
+          );
+          return (uniqueYears.length);
+        }
+      )
+    )
+
+    this.countries$ = olympics$.pipe(
+      map(
+        olympics => {
+          olympics.forEach(olympic => {
+            this.countriesById.push({ id: olympic.id, country: olympic.country });
+          });
+          return this.countriesById.length;
+        }
+      )
+    );
+
+    this.pieChartData$ = olympics$.pipe(
       map(
         olympics =>
           olympics.map(
             olympic => ({
               name: olympic.country,
-              value: this.computeMedalsCount(olympic.participations)
+              value: olympic.participations.reduce((sum, participation) => sum + participation.medalsCount, 0)
             })
           )
       )
     )
-  }
-
-  private computeMedalsCount(participations: Participation[]): number {
-    let result = 0;
-    participations.forEach(participation => result = result + participation.medalsCount);
-    return result;
   }
 
   onSelect(data: { name: string; value: number; label: string }): void {

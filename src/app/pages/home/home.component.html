@@ -1,11 +1,23 @@
-<h2>Olympic games app</h2>
-<hr />
+<header class="column">
+    <h1 class="column">{{ title }}</h1>
+</header>
 
-<div style="display: block;">
-    <div style="display: block;">
-        <ngx-charts-pie-chart [view]="view" [scheme]="'cool'" [results]="pieChartData$ | async " [gradient]="gradient"
-            [legend]="showLegend" [labels]="showLabels" [explodeSlices]="explodeSlices" [doughnut]="doughnut"
-            (select)="onSelect($event)">
+<main>
+    <section class="data-container">
+        <div class="data-item">
+            <p class="data-item-label">Number of JOs</p>
+            <p class="data-item-value">{{ years$ | async }}</p>
+        </div>
+        <div class="data-item">
+            <p class="data-item-label">Number of countries</p>
+            <p class="data-item-value">{{ countries$ | async }}</p>
+        </div>
+    </section>
+
+    <section class="chart-container">
+        <ngx-charts-pie-chart [scheme]="'cool'" [results]="pieChartData$ |
+            async " [gradient]="gradient" [legend]="showLegend" [labels]="showLabels" [explodeSlices]="explodeSlices"
+            [doughnut]="doughnut" (select)="onSelect($event)">
         </ngx-charts-pie-chart>
-    </div>
-</div>
+    </section>
+</main>

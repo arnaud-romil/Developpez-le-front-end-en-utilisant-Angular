@@ -1,1 +1,80 @@
 /* You can add global styles to this file, and also import other style files */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h1 {
+    font-weight: 100;
+    display: inline-block;
+    padding: 5px 20px 5px 20px;
+    color: aliceblue;
+    border-radius: 5px;
+    background-color: #397585;
+}
+
+.data-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.data-item {
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+    padding: 5px;
+    border: 2px solid #397585;
+    border-radius: 5px;
+}
+
+.data-item-label,
+.data-item-value {
+    margin: 0;
+    text-align: center;
+}
+
+.data-item-label {
+    color: darkgrey;
+}
+
+.data-item-value {
+    font-weight: bold;
+}
+
+.chart-container {
+    display: flex;
+    justify-content: center;
+    min-height: 350px;
+}
+
+.chart-container,
+.data-container {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+@media screen and (min-width: 768px) {
+
+    .chart-container,
+    .data-container {
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+    .data-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+}
