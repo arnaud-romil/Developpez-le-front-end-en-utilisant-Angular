@@ -1,3 +1,12 @@
+@if(isCountryIdNaN) {
+<div>
+    <p class="error-message">
+        The value "<em>{{ invalidCountryId }}"</em> is not a valid country identifier !
+    </p>
+</div>
+}
+@else {
+
 <header>
     <h1>{{ country$ | async }}</h1>
 </header>
@@ -29,3 +38,5 @@
     </section>
 
 </main>
+
+}

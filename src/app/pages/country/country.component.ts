@@ -10,6 +10,7 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
 })
 export class CountryComponent implements OnInit {
 
+  // Data to display
   country$!: Observable<string>;
   participations$!: Observable<number>;
   medals$!: Observable<number>;
@@ -25,6 +26,10 @@ export class CountryComponent implements OnInit {
   showGridLines = true;
   autoScale = false;
 
+  // Error Management
+  isCountryIdNaN: boolean = false;
+  invalidCountryId: string = '';
+
   constructor(
     private olympicService: OlympicService,
     private route: ActivatedRoute,
@@ -34,6 +39,11 @@ export class CountryComponent implements OnInit {
   ngOnInit(): void {
 
     const countryId = Number(this.route.snapshot.params['id']);
+    if (Number.isNaN(countryId)) {
+      this.isCountryIdNaN = true;
+      this.invalidCountryId = this.route.snapshot.params['id'];
+      return;
+    }
 
     const olympic$ = this.olympicService.getOlympics().pipe(
       filter(olympics => olympics.length > 0),
@@ -41,7 +51,7 @@ export class CountryComponent implements OnInit {
     );
 
     this.country$ = olympic$.pipe(
-      map(olympic => olympic[0].country)
+      map(olympic => olympic.length === 1 ? olympic[0].country : '')
     );
 
     this.participations$ = olympic$.pipe(
