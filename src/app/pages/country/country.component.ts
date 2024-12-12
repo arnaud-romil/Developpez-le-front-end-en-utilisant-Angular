@@ -29,6 +29,7 @@ export class CountryComponent implements OnInit {
   // Error Management
   isCountryIdNaN: boolean = false;
   invalidCountryId: string = '';
+  countryNotFoundMessage!: string;
 
   constructor(
     private olympicService: OlympicService,
@@ -47,27 +48,35 @@ export class CountryComponent implements OnInit {
 
     const olympic$ = this.olympicService.getOlympics().pipe(
       filter(olympics => olympics.length > 0),
-      map(olympics => olympics.filter(olympic => olympic.id === countryId))
+      map(olympics => {
+        const olympic = olympics.filter(olympic => olympic.id === countryId)
+        if (olympic.length === 0) {
+          this.countryNotFoundMessage = `Could not find country data for identifier: ${countryId} !`;
+        }
+        return olympic;
+      })
     );
 
     this.country$ = olympic$.pipe(
-      map(olympic => olympic.length === 1 ? olympic[0].country : '')
+      map(olympic => olympic.length === 1 ? olympic[0].country : 'Unknown Country')
     );
 
     this.participations$ = olympic$.pipe(
-      map(olympic => olympic[0].participations.length)
+      map(olympic => olympic.length === 1 ? olympic[0].participations.length : 0)
     );
 
     this.medals$ = olympic$.pipe(
       map(
-        olympic =>
-          olympic[0].participations.reduce((sum, participation) => sum + participation.medalsCount, 0)
+        olympic => olympic.length === 1
+          ? olympic[0].participations.reduce((sum, participation) => sum + participation.medalsCount, 0)
+          : 0
       ));
 
     this.athletes$ = olympic$.pipe(
       map(
-        olympic =>
-          olympic[0].participations.reduce((sum, participation) => sum + participation.athleteCount, 0)
+        olympic => olympic.length === 1
+          ? olympic[0].participations.reduce((sum, participation) => sum + participation.athleteCount, 0)
+          : 0
       ));
 
     this.lineChartData$ = olympic$.pipe(

@@ -12,6 +12,9 @@
 </header>
 
 <main>
+    @if(countryNotFoundMessage) {
+    <p class="error-message">{{ countryNotFoundMessage }}</p>
+    }
     <section class="data-container">
         <div class="data-item">
             <p class="data-item-label">Number of entries</p>
