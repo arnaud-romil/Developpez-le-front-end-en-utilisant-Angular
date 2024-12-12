@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { map, Observable } from 'rxjs';
+import { Olympic } from 'src/app/core/models/olympic.model';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
 @Component({
@@ -32,48 +33,47 @@ export class HomeComponent implements OnInit {
 
     const olympics$ = this.olympicService.getOlympics();
 
-    let uniqueYears: number[] = [];
     this.years$ = olympics$.pipe(
-      map(
-        olympics => {
-          olympics.forEach(olympic =>
-            olympic.participations.forEach(participation => {
-              if (!uniqueYears.includes(participation.year)) {
-                uniqueYears.push(participation.year);
-              }
-            })
-          );
-          return (uniqueYears.length);
-        }
-      )
+      map(olympics => this.computeYearsCount(olympics))
     )
 
     this.countries$ = olympics$.pipe(
-      map(
-        olympics => {
-          olympics.forEach(olympic => {
-            this.countriesById.push({ id: olympic.id, country: olympic.country });
-          });
-          return this.countriesById.length;
-        }
-      )
+      map(olympics => this.computeCountriesCount(olympics))
     );
 
     this.pieChartData$ = olympics$.pipe(
-      map(
-        olympics =>
-          olympics.map(
-            olympic => ({
-              name: olympic.country,
-              value: olympic.participations.reduce((sum, participation) => sum + participation.medalsCount, 0)
-            })
-          )
-      )
+      map(olympics => olympics.map(olympic => this.buildPieChartData(olympic)))
     )
   }
 
   onSelect(data: { name: string; value: number; label: string }): void {
     this.router.navigateByUrl('country/' + this.countriesById.find(i => i.country === data.name)?.id);
+  }
+
+  private computeYearsCount(olympics: Olympic[]): number {
+    let uniqueYears: number[] = [];
+    olympics.forEach(olympic =>
+      olympic.participations.forEach(participation => {
+        if (!uniqueYears.includes(participation.year)) {
+          uniqueYears.push(participation.year);
+        }
+      })
+    );
+    return uniqueYears.length;
+  }
+
+  private computeCountriesCount(olympics: Olympic[]): number {
+    olympics.forEach(olympic => {
+      this.countriesById.push({ id: olympic.id, country: olympic.country });
+    });
+    return this.countriesById.length;
+  }
+
+  private buildPieChartData(olympic: Olympic): ({ name: string; value: number }) {
+    return ({
+      name: olympic.country,
+      value: olympic.participations.reduce((sum, participation) => sum + participation.medalsCount, 0)
+    });
   }
 
 }
