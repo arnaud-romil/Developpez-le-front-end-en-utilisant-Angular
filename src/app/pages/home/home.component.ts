@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { map, Observable } from 'rxjs';
+import { ChartData } from 'src/app/core/models/chart-data.model';
 import { Olympic } from 'src/app/core/models/olympic.model';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
@@ -14,7 +15,7 @@ export class HomeComponent implements OnInit {
   title: string = 'Medals per Country';
   years$!: Observable<number>;
   countries$!: Observable<number>;
-  pieChartData$!: Observable<{ name: string; value: number }[]>;
+  pieChartData$!: Observable<ChartData[]>;
   private countriesById: { id: number; country: string }[] = [];
 
   // Pie Chart options
@@ -66,10 +67,10 @@ export class HomeComponent implements OnInit {
     olympics.forEach(olympic => {
       this.countriesById.push({ id: olympic.id, country: olympic.country });
     });
-    return this.countriesById.length;
+    return olympics.length;
   }
 
-  private buildPieChartData(olympic: Olympic): ({ name: string; value: number }) {
+  private buildPieChartData(olympic: Olympic): ChartData {
     return ({
       name: olympic.country,
       value: olympic.participations.reduce((sum, participation) => sum + participation.medalsCount, 0)

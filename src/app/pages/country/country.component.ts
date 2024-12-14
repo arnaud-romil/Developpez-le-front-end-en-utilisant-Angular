@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, map, Observable } from 'rxjs';
+import { LineChartData } from 'src/app/core/models/line-chart-data.model';
 import { Olympic } from 'src/app/core/models/olympic.model';
 import { Participation } from 'src/app/core/models/participation.model';
 import { OlympicService } from 'src/app/core/services/olympic.service';
@@ -17,7 +18,7 @@ export class CountryComponent implements OnInit {
   participations$!: Observable<number>;
   medals$!: Observable<number>;
   athletes$!: Observable<number>;
-  lineChartData$!: Observable<{ name: string; series: { name: string; value: number }[] }[]>;
+  lineChartData$!: Observable<LineChartData[]>;
 
   //Line Chart options
   legend = false;
@@ -98,7 +99,7 @@ export class CountryComponent implements OnInit {
     return participations.reduce((sum, participation) => sum + participation.athleteCount, 0);
   }
 
-  private buildLineChartData(olympic: Olympic): ({ name: string; series: { name: string; value: number }[] }) {
+  private buildLineChartData(olympic: Olympic): LineChartData {
     return ({
       name: olympic.country,
       series: olympic.participations.map(partition => ({ name: partition.year.toString(), value: partition.medalsCount }))
