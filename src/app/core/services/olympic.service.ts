@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, filter, map, tap } from 'rxjs/operators';
 import { Olympic } from '../models/olympic.model';
+import { HttpErrorService } from './http-error.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,17 +23,17 @@ export class OlympicService {
     map(() => true)
   );
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private errorService: HttpErrorService
+  ) { }
 
   loadInitialData(): Observable<Olympic[]> {
     return this.http.get<Olympic[]>(this.olympicUrl).pipe(
       tap((value) => this.olympicsSubject.next(value)),
-      catchError((error, caught) => {
-        // TODO: improve error handling
-        console.error(error);
-        // can be useful to end loading state and let the user know something went wrong
+      catchError((error) => {
         this.olympicsSubject.next([]);
-        return caught;
+        throw this.errorService.formatError(error);
       })
     );
   }
