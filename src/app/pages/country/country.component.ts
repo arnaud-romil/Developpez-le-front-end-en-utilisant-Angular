@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { filter, map, Observable } from 'rxjs';
+import { map, Observable, shareReplay, tap } from 'rxjs';
 import { LineChartData } from 'src/app/core/models/line-chart-data.model';
 import { Olympic } from 'src/app/core/models/olympic.model';
 import { Participation } from 'src/app/core/models/participation.model';
@@ -11,14 +11,37 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
   templateUrl: './country.component.html',
   styleUrls: ['./country.component.scss']
 })
-export class CountryComponent implements OnInit {
+export class CountryComponent {
 
-  // Data to display
-  country$!: Observable<string>;
-  participations$!: Observable<number>;
-  medals$!: Observable<number>;
-  athletes$!: Observable<number>;
-  lineChartData$!: Observable<LineChartData[]>;
+  errorMessage: string = '';
+
+  readonly dataLoaded$: Observable<boolean> = this.olympicService.dataLoaded$;
+
+  readonly olympicSelected$: Observable<Olympic | undefined> = this.olympicService.olympics$.pipe(
+    map(olympics => olympics.find(olympic => olympic.id === Number(this.route.snapshot.params['id']))),
+    tap(olympic => olympic ? this.errorMessage = '' : this.setErrorMessage()),
+    shareReplay(1)
+  );
+
+  readonly country$ = this.olympicSelected$.pipe(
+    map(olympic => olympic ? olympic.country : 'Unknown')
+  )
+
+  readonly participations$ = this.olympicSelected$.pipe(
+    map(olympic => olympic ? olympic.participations.length : 0)
+  );
+
+  readonly medals$ = this.olympicSelected$.pipe(
+    map(olympic => olympic ? this.computeMedalsCount(olympic.participations) : 0)
+  )
+
+  readonly athletes$ = this.olympicSelected$.pipe(
+    map(olympic => olympic ? this.computeAthleteCount(olympic.participations) : 0)
+  )
+
+  readonly lineChartData$: Observable<LineChartData[]> = this.olympicSelected$.pipe(
+    map(olympic => olympic ? [olympic].map(olympic => this.buildLineChartData(olympic)) : [])
+  )
 
   //Line Chart options
   legend = false;
@@ -29,66 +52,14 @@ export class CountryComponent implements OnInit {
   showGridLines = true;
   autoScale = false;
 
-  // Error Management
-  isCountryIdNaN: boolean = false;
-  invalidCountryId: string = '';
-  countryNotFoundMessage!: string;
-
   constructor(
     private olympicService: OlympicService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
 
-  ngOnInit(): void {
-
-    const countryId = Number(this.route.snapshot.params['id']);
-    if (Number.isNaN(countryId)) {
-      this.isCountryIdNaN = true;
-      this.invalidCountryId = this.route.snapshot.params['id'];
-      return;
-    }
-
-    const olympic$ = this.olympicService.getOlympics().pipe(
-      filter(olympics => olympics.length > 0),
-      map(olympics => this.findOlympicById(olympics, countryId))
-    );
-
-    this.country$ = olympic$.pipe(
-      map(olympic => olympic.length === 1 ? olympic[0].country : 'Unknown Country')
-    );
-
-    this.participations$ = olympic$.pipe(
-      map(olympic => olympic.length === 1 ? olympic[0].participations.length : 0)
-    );
-
-    this.medals$ = olympic$.pipe(
-      map(olympic => olympic.length === 1 ? this.computeMedalsCount(olympic[0].participations) : 0)
-    );
-
-    this.athletes$ = olympic$.pipe(
-      map(olympic => olympic.length === 1 ? this.computeAthleteCount(olympic[0].participations) : 0)
-    );
-
-    this.lineChartData$ = olympic$.pipe(
-      map(olympics => olympics.map(olympic => this.buildLineChartData(olympic)))
-    );
-  }
-
-  onSelect(data: { name: string; value: number; series: string }): void {
-    console.log('Item clicked', JSON.parse(JSON.stringify(data)));
-  }
-
   goBack(): void {
     this.router.navigateByUrl('/');
-  }
-
-  private findOlympicById(olympics: Olympic[], countryId: number): Olympic[] {
-    const olympic = olympics.filter(olympic => olympic.id === countryId)
-    if (olympic.length === 0) {
-      this.countryNotFoundMessage = `Could not find country data for identifier: ${countryId} !`;
-    }
-    return olympic;
   }
 
   private computeMedalsCount(participations: Participation[]): number {
@@ -106,5 +77,7 @@ export class CountryComponent implements OnInit {
     });
   }
 
-
+  private setErrorMessage(): void {
+    this.errorMessage = `Could not find olympic with identifier: ${this.route.snapshot.params['id']}`;
+  }
 }

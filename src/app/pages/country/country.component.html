@@ -1,19 +1,15 @@
-@if(isCountryIdNaN) {
-<div>
-    <p class="error-message">
-        The value "<em>{{ invalidCountryId }}"</em> is not a valid country identifier !
-    </p>
-</div>
-}
-@else {
-
 <header>
-    <h1>{{ country$ | async }}</h1>
+    <h1>{{ (country$ | async) ?? 'Country' }}</h1>
 </header>
 
 <main>
-    @if(countryNotFoundMessage) {
-    <p class="error-message">{{ countryNotFoundMessage }}</p>
+    @if( !(dataLoaded$ | async) ) {
+    <p style="color: red; text-align: center;">Please wait while we load your data...</p>
+    }
+    @if(errorMessage) {
+    <p class="error-message">
+        {{ errorMessage }}
+    </p>
     }
     <section class="data-container">
         <div class="data-item">
@@ -32,14 +28,10 @@
     <section class="chart-container">
         <ngx-charts-line-chart [scheme]="'cool'" [results]="lineChartData$ | async" [legend]="legend" [xAxis]="xAxis"
             [yAxis]="yAxis" [showGridLines]="showGridLines" [autoScale]="autoScale" [animations]="animations"
-            [showXAxisLabel]="showLabels" [showYAxisLabel]="showLabels" [xAxisLabel]="'Year'" [yAxisLabel]="'Medals'"
-            (select)="onSelect($event)">
+            [showXAxisLabel]="showLabels" [showYAxisLabel]="showLabels" [xAxisLabel]="'Year'" [yAxisLabel]="'Medals'">
         </ngx-charts-line-chart>
     </section>
     <section>
         <button class="back-button" type="button" (click)="goBack()">BACK</button>
     </section>
-
 </main>
-
-}

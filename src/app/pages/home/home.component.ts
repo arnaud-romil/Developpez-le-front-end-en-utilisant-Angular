@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { map, Observable } from 'rxjs';
+import { map, Observable, shareReplay } from 'rxjs';
 import { ChartData } from 'src/app/core/models/chart-data.model';
 import { Olympic } from 'src/app/core/models/olympic.model';
 import { OlympicService } from 'src/app/core/services/olympic.service';
@@ -10,13 +10,27 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
 
   title: string = 'Medals per Country';
-  years$!: Observable<number>;
-  countries$!: Observable<number>;
-  pieChartData$!: Observable<ChartData[]>;
-  private countriesById: { id: number; country: string }[] = [];
+
+  readonly dataLoaded$: Observable<boolean> = this.olympicService.dataLoaded$;
+
+  readonly olympics$: Observable<Olympic[]> = this.olympicService.olympics$.pipe(
+    shareReplay(1)
+  );
+
+  readonly years$: Observable<number> = this.olympics$.pipe(
+    map(olympics => this.computeYearsCount(olympics))
+  )
+
+  readonly countries$: Observable<number> = this.olympics$.pipe(
+    map(olympics => olympics.length)
+  );
+
+  readonly pieChartData$: Observable<ChartData[]> = this.olympics$.pipe(
+    map(olympics => olympics.map(olympic => this.buildPieChartData(olympic)))
+  )
 
   // Pie Chart options
   gradient: boolean = true;
@@ -30,25 +44,9 @@ export class HomeComponent implements OnInit {
     private router: Router
   ) { }
 
-  ngOnInit(): void {
-
-    const olympics$ = this.olympicService.getOlympics();
-
-    this.years$ = olympics$.pipe(
-      map(olympics => this.computeYearsCount(olympics))
-    )
-
-    this.countries$ = olympics$.pipe(
-      map(olympics => this.computeCountriesCount(olympics))
-    );
-
-    this.pieChartData$ = olympics$.pipe(
-      map(olympics => olympics.map(olympic => this.buildPieChartData(olympic)))
-    )
-  }
-
   onSelect(data: { name: string; value: number; label: string }): void {
-    this.router.navigateByUrl('country/' + this.countriesById.find(i => i.country === data.name)?.id);
+    const olympicId = this.olympicService.findByCountry(data.name)?.id;
+    this.router.navigateByUrl('country/' + olympicId);
   }
 
   private computeYearsCount(olympics: Olympic[]): number {
@@ -61,13 +59,6 @@ export class HomeComponent implements OnInit {
       })
     );
     return uniqueYears.length;
-  }
-
-  private computeCountriesCount(olympics: Olympic[]): number {
-    olympics.forEach(olympic => {
-      this.countriesById.push({ id: olympic.id, country: olympic.country });
-    });
-    return olympics.length;
   }
 
   private buildPieChartData(olympic: Olympic): ChartData {
