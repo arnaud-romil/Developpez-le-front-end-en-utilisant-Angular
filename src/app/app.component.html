@@ -1,1 +1,8 @@
+@if(errorMessage) {
+<p class="messages__error">
+    Could not load application data: {{ errorMessage }}
+</p>
+}
+@else {
 <router-outlet></router-outlet>
+}
