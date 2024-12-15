@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
-@use 'variables' as *;
+/* Colors */
+$custom-color: #397585;
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -73,6 +74,14 @@ body {
     padding: 10px;
     background-color: pink;
     border: 2px solid red;
+    border-radius: 5px;
+}
+
+.back-button {
+    padding: 10px;
+    display: block;
+    margin: auto;
+    border: 2px solid $custom-color;
     border-radius: 5px;
 }
 
