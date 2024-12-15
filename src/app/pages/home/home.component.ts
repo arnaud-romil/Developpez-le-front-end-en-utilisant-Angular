@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { map, Observable, of } from 'rxjs';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { map, Observable, shareReplay } from 'rxjs';
+import { ChartData } from 'src/app/core/models/chart-data.model';
 import { Olympic } from 'src/app/core/models/olympic.model';
-import { Participation } from 'src/app/core/models/participation.model';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
 @Component({
@@ -9,41 +10,60 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
 
-  pieChartData$!: Observable<{ name: string; value: number }[]>;
+  title: string = 'Medals per Country';
+
+  readonly dataLoaded$: Observable<boolean> = this.olympicService.dataLoaded$;
+
+  readonly olympics$: Observable<Olympic[]> = this.olympicService.olympics$.pipe(
+    shareReplay(1)
+  );
+
+  readonly years$: Observable<number> = this.olympics$.pipe(
+    map(olympics => this.computeYearsCount(olympics))
+  )
+
+  readonly countries$: Observable<number> = this.olympics$.pipe(
+    map(olympics => olympics.length)
+  );
+
+  readonly pieChartData$: Observable<ChartData[]> = this.olympics$.pipe(
+    map(olympics => olympics.map(olympic => this.buildPieChartData(olympic)))
+  )
 
   // Pie Chart options
-  view: [number, number] = [700, 400]; // Dimensions [width, height]
   gradient: boolean = true;
   showLegend: boolean = false;
   showLabels: boolean = true;
   explodeSlices: boolean = false;
   doughnut: boolean = false;
 
-  constructor(private olympicService: OlympicService) { }
+  constructor(
+    private olympicService: OlympicService,
+    private router: Router
+  ) { }
 
-  ngOnInit(): void {
-    this.pieChartData$ = this.olympicService.getOlympics().pipe(
-      map(
-        olympics =>
-          olympics.map(
-            olympic => ({
-              name: olympic.country,
-              value: this.computeMedalsCount(olympic.participations)
-            })
-          )
-      )
-    )
+  onSelect(data: { name: string; value: number; label: string }): void {
+    // TODO
   }
 
-  private computeMedalsCount(participations: Participation[]): number {
-    let result = 0;
-    participations.forEach(participation => result = result + participation.medalsCount);
-    return result;
+  private computeYearsCount(olympics: Olympic[]): number {
+    let uniqueYears: number[] = [];
+    olympics.forEach(olympic =>
+      olympic.participations.forEach(participation => {
+        if (!uniqueYears.includes(participation.year)) {
+          uniqueYears.push(participation.year);
+        }
+      })
+    );
+    return uniqueYears.length;
   }
 
-  onSelect(data: any): void {
-    console.log('Item sélectionné', JSON.stringify(data));
+  private buildPieChartData(olympic: Olympic): ChartData {
+    return ({
+      name: olympic.country,
+      value: olympic.participations.reduce((sum, participation) => sum + participation.medalsCount, 0)
+    });
   }
 }
