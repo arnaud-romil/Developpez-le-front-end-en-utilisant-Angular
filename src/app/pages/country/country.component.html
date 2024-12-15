@@ -1,28 +1,30 @@
-<header>
-    <h1>{{ (country$ | async) ?? 'Country' }}</h1>
+<header class="header">
+    <h1 class="header__title">{{ (country$ | async) ?? 'Country' }}</h1>
 </header>
 
 <main>
-    @if( !(dataLoaded$ | async) ) {
-    <p style="color: red; text-align: center;">Please wait while we load your data...</p>
-    }
-    @if(errorMessage) {
-    <p class="error-message">
-        {{ errorMessage }}
-    </p>
-    }
+    <section class="messages">
+        @if( !(dataLoaded$ | async) ) {
+        <p class="messages__loading">Please wait while we load your data...</p>
+        }
+        @if(errorMessage) {
+        <p class="messages__error">
+            {{ errorMessage }}
+        </p>
+        }
+    </section>
     <section class="data-container">
-        <div class="data-item">
-            <p class="data-item-label">Number of entries</p>
-            <p class="data-item-value">{{ participations$ | async }}</p>
+        <div class="data-container__item">
+            <p class="data-container__label">Number of entries</p>
+            <p class="data-container__value">{{ participations$ | async }}</p>
         </div>
-        <div class="data-item">
-            <p class="data-item-label">Total number medals</p>
-            <p class="data-item-value">{{ medals$ | async }}</p>
+        <div class="data-container__item">
+            <p class="data-container__label">Total number medals</p>
+            <p class="data-container__value">{{ medals$ | async }}</p>
         </div>
-        <div class="data-item">
-            <p class="data-item-label">Total number of athletes</p>
-            <p class="data-item-value">{{ athletes$ | async }}</p>
+        <div class="data-container__item">
+            <p class="data-container__label">Total number of athletes</p>
+            <p class="data-container__value">{{ athletes$ | async }}</p>
         </div>
     </section>
     <section class="chart-container">

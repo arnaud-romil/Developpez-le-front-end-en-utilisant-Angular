@@ -1,23 +1,25 @@
-<header class="column">
-    <h1 class="column">{{ title }}</h1>
+<header class="header">
+    <h1 class="header__title">{{ title }}</h1>
 </header>
 
 <main>
-    <section>
-        <p class="page-intro">This web page allows to visualize data from the previous Olympic games editions.</p>
+    <section class="messages">
+        <p class="messages__presentation">
+            This web page allows to visualize data from the previous Olympic games
+            editions.
+        </p>
         @if( !(dataLoaded$ | async) ) {
-        <p style="color: red; text-align: center;">Please wait while we load your data...</p>
+        <p class="messages__loading">Please wait while we load your data...</p>
         }
-
     </section>
     <section class="data-container">
-        <div class="data-item">
-            <p class="data-item-label">Number of JOs</p>
-            <p class="data-item-value">{{ years$ | async }}</p>
+        <div class="data-container__item">
+            <p class="data-container__label">Number of JOs</p>
+            <p class="data-container__value">{{ years$ | async }}</p>
         </div>
-        <div class="data-item">
-            <p class="data-item-label">Number of countries</p>
-            <p class="data-item-value">{{ countries$ | async }}</p>
+        <div class="data-container__item">
+            <p class="data-container__label">Number of countries</p>
+            <p class="data-container__value">{{ countries$ | async }}</p>
         </div>
     </section>
 
