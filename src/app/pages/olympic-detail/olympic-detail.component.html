@@ -27,8 +27,8 @@
             <p class="data-container__value">{{ athletes$ | async }}</p>
         </div>
     </section>
-    <section class="chart-container">
-        <ngx-charts-line-chart [scheme]="'cool'" [results]="lineChartData$ | async" [legend]="legend" [xAxis]="xAxis"
+    <section class="chart-container" *ngIf="lineChartData$ | async as lineChartData">
+        <ngx-charts-line-chart [scheme]="'cool'" [results]="lineChartData" [legend]="legend" [xAxis]="xAxis"
             [yAxis]="yAxis" [showGridLines]="showGridLines" [autoScale]="autoScale" [animations]="animations"
             [showXAxisLabel]="showLabels" [showYAxisLabel]="showLabels" [xAxisLabel]="'Year'" [yAxisLabel]="'Medals'">
         </ngx-charts-line-chart>
