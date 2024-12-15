@@ -1,3 +1,32 @@
-<h2>Olympic games app</h2>
-<hr />
-<p>{{ (olympics$ | async)?.length }} data loaded</p>
+<header class="header">
+    <h1 class="header__title">{{ title }}</h1>
+</header>
+
+<main>
+    <section class="messages">
+        <p class="messages__presentation">
+            This web page allows to visualize data from the previous Olympic games
+            editions.
+        </p>
+        @if( !(dataLoaded$ | async) ) {
+        <p class="messages__loading">Please wait while we load your data...</p>
+        }
+    </section>
+    <section class="data-container">
+        <div class="data-container__item">
+            <p class="data-container__label">Number of JOs</p>
+            <p class="data-container__value">{{ years$ | async }}</p>
+        </div>
+        <div class="data-container__item">
+            <p class="data-container__label">Number of countries</p>
+            <p class="data-container__value">{{ countries$ | async }}</p>
+        </div>
+    </section>
+
+    <section class="chart-container">
+        <ngx-charts-pie-chart [scheme]="'cool'" [results]="pieChartData$ |
+            async " [gradient]="gradient" [legend]="showLegend" [labels]="showLabels" [explodeSlices]="explodeSlices"
+            [doughnut]="doughnut" (select)="onSelect($event)">
+        </ngx-charts-pie-chart>
+    </section>
+</main>

@@ -1,1 +1,104 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Colors */
+$custom-color: #397585;
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &__title {
+        font-weight: 100;
+        display: inline-block;
+        padding: 5px 20px 5px 20px;
+        color: aliceblue;
+        border-radius: 5px;
+        background-color: $custom-color;
+    }
+}
+
+.messages__loading {
+    color: red;
+    text-align: center;
+}
+
+.data-container {
+    display: flex;
+    flex-direction: column;
+
+    &__item {
+        display: flex;
+        flex-direction: column;
+        margin: 5px;
+        padding: 5px;
+        border: 2px solid $custom-color;
+        border-radius: 5px;
+    }
+
+    &__label,
+    &__value {
+        margin: 0;
+        text-align: center;
+    }
+
+    &__label {
+        color: darkgrey;
+    }
+
+    &__value {
+        font-weight: bold;
+    }
+}
+
+.chart-container {
+    display: flex;
+    justify-content: center;
+    min-height: 350px;
+}
+
+.chart-container,
+.data-container {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.messages__error {
+    text-align: center;
+    padding: 10px;
+    background-color: pink;
+    border: 2px solid red;
+    border-radius: 5px;
+}
+
+.back-button {
+    padding: 10px;
+    display: block;
+    margin: auto;
+    border: 2px solid $custom-color;
+    border-radius: 5px;
+}
+
+@media screen and (min-width: 768px) {
+
+    .chart-container,
+    .data-container {
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+    .data-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+}
