@@ -23,19 +23,19 @@ export class OlympicDetailComponent {
     shareReplay(1)
   );
 
-  readonly country$ = this.olympicSelected$.pipe(
+  readonly country$: Observable<string> = this.olympicSelected$.pipe(
     map(olympic => olympic ? olympic.country : 'Unknown')
   )
 
-  readonly participations$ = this.olympicSelected$.pipe(
+  readonly participations$: Observable<number> = this.olympicSelected$.pipe(
     map(olympic => olympic ? olympic.participations.length : 0)
   );
 
-  readonly medals$ = this.olympicSelected$.pipe(
+  readonly medals$: Observable<number> = this.olympicSelected$.pipe(
     map(olympic => olympic ? this.computeMedalsCount(olympic.participations) : 0)
   )
 
-  readonly athletes$ = this.olympicSelected$.pipe(
+  readonly athletes$: Observable<number> = this.olympicSelected$.pipe(
     map(olympic => olympic ? this.computeAthleteCount(olympic.participations) : 0)
   )
 
