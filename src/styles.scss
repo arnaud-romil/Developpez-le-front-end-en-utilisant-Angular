@@ -1,9 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
-:root {
-    /* Colors */
-    --custom-color: #397585;
-}
+@use 'variables' as *;
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -13,15 +10,15 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-}
 
-.header__title {
-    font-weight: 100;
-    display: inline-block;
-    padding: 5px 20px 5px 20px;
-    color: aliceblue;
-    border-radius: 5px;
-    background-color: var(--custom-color);
+    &__title {
+        font-weight: 100;
+        display: inline-block;
+        padding: 5px 20px 5px 20px;
+        color: aliceblue;
+        border-radius: 5px;
+        background-color: $custom-color;
+    }
 }
 
 .messages__loading {
@@ -32,30 +29,29 @@ body {
 .data-container {
     display: flex;
     flex-direction: column;
-}
 
-.data-container__item {
-    display: flex;
-    flex-direction: column;
-    margin: 5px;
-    padding: 5px;
-    border: 2px solid var(--custom-color);
-    border-radius: 5px;
-}
+    &__item {
+        display: flex;
+        flex-direction: column;
+        margin: 5px;
+        padding: 5px;
+        border: 2px solid $custom-color;
+        border-radius: 5px;
+    }
 
-.data-container__label,
-.data-container__value {
-    margin: 0;
-    text-align: center;
-}
+    &__label,
+    &__value {
+        margin: 0;
+        text-align: center;
+    }
 
+    &__label {
+        color: darkgrey;
+    }
 
-.data-container__label {
-    color: darkgrey;
-}
-
-.data-container__value {
-    font-weight: bold;
+    &__value {
+        font-weight: bold;
+    }
 }
 
 .chart-container {
