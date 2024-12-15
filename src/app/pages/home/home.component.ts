@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { Olympic } from 'src/app/core/models/olympic.model';
+import { Participation } from 'src/app/core/models/participation.model';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
 @Component({
@@ -9,11 +10,40 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  public olympics$: Observable<Olympic[]> = of([]);
+
+  pieChartData$!: Observable<{ name: string; value: number }[]>;
+
+  // Pie Chart options
+  view: [number, number] = [700, 400]; // Dimensions [width, height]
+  gradient: boolean = true;
+  showLegend: boolean = false;
+  showLabels: boolean = true;
+  explodeSlices: boolean = false;
+  doughnut: boolean = false;
 
   constructor(private olympicService: OlympicService) { }
 
   ngOnInit(): void {
-    this.olympics$ = this.olympicService.getOlympics();
+    this.pieChartData$ = this.olympicService.getOlympics().pipe(
+      map(
+        olympics =>
+          olympics.map(
+            olympic => ({
+              name: olympic.country,
+              value: this.computeMedalsCount(olympic.participations)
+            })
+          )
+      )
+    )
+  }
+
+  private computeMedalsCount(participations: Participation[]): number {
+    let result = 0;
+    participations.forEach(participation => result = result + participation.medalsCount);
+    return result;
+  }
+
+  onSelect(data: any): void {
+    console.log('Item sélectionné', JSON.stringify(data));
   }
 }
