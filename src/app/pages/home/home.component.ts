@@ -45,7 +45,8 @@ export class HomeComponent {
   ) { }
 
   onSelect(data: { name: string; value: number; label: string }): void {
-    // TODO
+    const olympicId = this.olympicService.findByCountry(data.name)?.id;
+    this.router.navigateByUrl('country/' + olympicId);
   }
 
   private computeYearsCount(olympics: Olympic[]): number {

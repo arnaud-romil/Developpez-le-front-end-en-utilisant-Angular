@@ -36,4 +36,8 @@ export class OlympicService {
       })
     );
   }
+
+  findByCountry(country: string): Olympic | undefined {
+    return this.olympics.find(olympic => olympic.country === country);
+  }
 }
