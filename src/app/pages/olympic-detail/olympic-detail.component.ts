@@ -39,8 +39,8 @@ export class OlympicDetailComponent {
     map(olympic => olympic ? this.computeAthleteCount(olympic.participations) : 0)
   )
 
-  readonly lineChartData$: Observable<LineChartData[]> = this.olympicSelected$.pipe(
-    map(olympic => olympic ? [olympic].map(olympic => this.buildLineChartData(olympic)) : [])
+  readonly lineChartData$: Observable<LineChartData[] | undefined> = this.olympicSelected$.pipe(
+    map(olympic => olympic ? [olympic].map(olympic => this.buildLineChartData(olympic)) : undefined)
   )
 
   //Line Chart options
