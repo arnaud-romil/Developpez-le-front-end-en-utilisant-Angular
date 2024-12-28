@@ -4,9 +4,7 @@
 
 <main>
     <section class="messages">
-        @if( !(dataLoaded$ | async) ) {
-        <p class="messages__loading">Please wait while we load your data...</p>
-        }
+        <p *ngIf="!(dataLoaded$ |async)" class="messages__loading">Please wait while we load your data...</p>
     </section>
     <section class="data-container">
         <div class="data-container__item">
