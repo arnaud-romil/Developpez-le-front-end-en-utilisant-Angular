@@ -4,13 +4,7 @@
 
 <main>
     <section class="messages">
-        <p class="messages__presentation">
-            This web page allows to visualize data from the previous Olympic games
-            editions.
-        </p>
-        @if( !(dataLoaded$ | async) ) {
-        <p class="messages__loading">Please wait while we load your data...</p>
-        }
+        <p *ngIf="!(dataLoaded$ |async)" class="messages__loading">Please wait while we load your data...</p>
     </section>
     <section class="data-container">
         <div class="data-container__item">
@@ -26,7 +20,11 @@
     <section class="chart-container">
         <ngx-charts-pie-chart [scheme]="'cool'" [results]="pieChartData$ |
             async " [gradient]="gradient" [legend]="showLegend" [labels]="showLabels" [explodeSlices]="explodeSlices"
-            [doughnut]="doughnut" (select)="onSelect($event)">
+            [doughnut]="doughnut" ngx-tooltip [tooltipTemplate]="tooltipTemplate" (select)="onSelect($event)">
+            <ng-template #tooltipTemplate let-model="model">
+                <app-custom-tooltip [data]="model" />
+            </ng-template>
         </ngx-charts-pie-chart>
+
     </section>
 </main>

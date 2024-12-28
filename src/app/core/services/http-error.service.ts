@@ -6,8 +6,6 @@ import { Injectable } from '@angular/core';
 })
 export class HttpErrorService {
 
-  constructor() { }
-
   formatError(err: HttpErrorResponse): string {
     return this.httpErrorFormatter(err);
   }

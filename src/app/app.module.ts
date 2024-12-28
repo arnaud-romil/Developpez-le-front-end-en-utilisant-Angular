@@ -8,9 +8,10 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { OlympicDetailComponent } from './pages/olympic-detail/olympic-detail.component';
+import { CustomTooltipComponent } from './pages/custom-tooltip/custom-tooltip.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, NotFoundComponent, OlympicDetailComponent],
+  declarations: [AppComponent, HomeComponent, NotFoundComponent, OlympicDetailComponent, CustomTooltipComponent],
   imports: [BrowserModule, AppRoutingModule, NgxChartsModule, BrowserAnimationsModule],
   providers: [
     provideHttpClient(withInterceptorsFromDi())
