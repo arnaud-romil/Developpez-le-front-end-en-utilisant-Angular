@@ -98,6 +98,10 @@ body {
     border-right: 7px solid $custom-color !important;
 }
 
+.position-left.tooltip-caret {
+    border-left: 7px solid $custom-color !important;
+}
+
 ngx-tooltip-content.type-popover {
     display: none;
 }
