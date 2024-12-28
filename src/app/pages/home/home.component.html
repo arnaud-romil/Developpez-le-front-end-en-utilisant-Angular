@@ -4,10 +4,6 @@
 
 <main>
     <section class="messages">
-        <p class="messages__presentation">
-            This web page allows to visualize data from the previous Olympic games
-            editions.
-        </p>
         @if( !(dataLoaded$ | async) ) {
         <p class="messages__loading">Please wait while we load your data...</p>
         }
