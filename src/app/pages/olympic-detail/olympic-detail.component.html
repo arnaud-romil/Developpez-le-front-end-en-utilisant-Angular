@@ -30,7 +30,7 @@
     <section class="chart-container" *ngIf="lineChartData$ | async as lineChartData">
         <ngx-charts-line-chart [scheme]="'cool'" [results]="lineChartData" [legend]="legend" [xAxis]="xAxis"
             [yAxis]="yAxis" [showGridLines]="showGridLines" [autoScale]="autoScale" [animations]="animations"
-            [showXAxisLabel]="showLabels" [showYAxisLabel]="showLabels" [xAxisLabel]="'Year'" [yAxisLabel]="'Medals'">
+            [showXAxisLabel]="showLabels" [showYAxisLabel]="showLabels" [xAxisLabel]="'Dates'">
         </ngx-charts-line-chart>
     </section>
     <section>
