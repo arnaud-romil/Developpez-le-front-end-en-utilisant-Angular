@@ -85,6 +85,24 @@ body {
     border-radius: 5px;
 }
 
+.ngx-charts-tooltip-content {
+    background-color: $custom-color !important;
+    border-radius: 5px !important;
+}
+
+.position-top.tooltip-caret {
+    border-top: 7px solid $custom-color !important;
+}
+
+.position-right.tooltip-caret {
+    border-right: 7px solid $custom-color !important;
+}
+
+ngx-tooltip-content.type-popover {
+    display: none;
+}
+
+
 @media screen and (min-width: 768px) {
 
     .chart-container,

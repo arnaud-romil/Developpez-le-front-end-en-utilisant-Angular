@@ -26,7 +26,11 @@
     <section class="chart-container">
         <ngx-charts-pie-chart [scheme]="'cool'" [results]="pieChartData$ |
             async " [gradient]="gradient" [legend]="showLegend" [labels]="showLabels" [explodeSlices]="explodeSlices"
-            [doughnut]="doughnut" (select)="onSelect($event)">
+            [doughnut]="doughnut" ngx-tooltip [tooltipTemplate]="tooltipTemplate" (select)="onSelect($event)">
+            <ng-template #tooltipTemplate let-model="model">
+                <app-custom-tooltip [data]="model" />
+            </ng-template>
         </ngx-charts-pie-chart>
+
     </section>
 </main>
