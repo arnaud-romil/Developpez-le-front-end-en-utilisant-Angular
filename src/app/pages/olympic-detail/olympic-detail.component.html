@@ -4,14 +4,10 @@
 
 <main>
     <section class="messages">
-        @if( !(dataLoaded$ | async) ) {
-        <p class="messages__loading">Please wait while we load your data...</p>
-        }
-        @if(errorMessage) {
-        <p class="messages__error">
+        <p *ngIf="!(dataLoaded$ | async)" class="messages__loading">Please wait while we load your data...</p>
+        <p *ngIf="errorMessage" class="messages__error">
             {{ errorMessage }}
         </p>
-        }
     </section>
     <section class="data-container">
         <div class="data-container__item">
@@ -30,7 +26,7 @@
     <section class="chart-container" *ngIf="lineChartData$ | async as lineChartData">
         <ngx-charts-line-chart [scheme]="'cool'" [results]="lineChartData" [legend]="legend" [xAxis]="xAxis"
             [yAxis]="yAxis" [showGridLines]="showGridLines" [autoScale]="autoScale" [animations]="animations"
-            [showXAxisLabel]="showLabels" [showYAxisLabel]="showLabels" [xAxisLabel]="'Year'" [yAxisLabel]="'Medals'">
+            [showXAxisLabel]="showLabels" [showYAxisLabel]="showLabels" [xAxisLabel]="'Dates'">
         </ngx-charts-line-chart>
     </section>
     <section>

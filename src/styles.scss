@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Colors */
-$custom-color: #397585;
+$custom-color: #04838f;
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -84,6 +84,24 @@ body {
     border: 2px solid $custom-color;
     border-radius: 5px;
 }
+
+.ngx-charts-tooltip-content {
+    background-color: $custom-color !important;
+    border-radius: 5px !important;
+}
+
+.position-top.tooltip-caret {
+    border-top: 7px solid $custom-color !important;
+}
+
+.position-right.tooltip-caret {
+    border-right: 7px solid $custom-color !important;
+}
+
+ngx-tooltip-content.type-popover {
+    display: none;
+}
+
 
 @media screen and (min-width: 768px) {
 
